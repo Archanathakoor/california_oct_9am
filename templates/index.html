@@ -1,0 +1,115 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>California HomeValue</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<header class="navbar">
+    <a href="/" class="brand">
+        <span class="brand-icon">⌂</span>
+        <span>California <strong>HomeValue</strong></span>
+    </a>
+    <span class="nav-label">Housing Price Prediction</span>
+</header>
+
+<main class="container">
+
+    <section class="hero">
+        <span class="eyebrow">SMART PROPERTY ESTIMATOR</span>
+
+        <h1>Discover Your Property's<br>
+            <span>Estimated Value</span>
+        </h1>
+
+        <p>
+            Enter your housing details below to estimate property
+            value using machine learning.
+        </p>
+    </section>
+
+    <section class="content-card">
+
+        <div class="card-heading">
+            <div>
+                <h2>Property Details</h2>
+                <p>Complete all fields to calculate the estimate.</p>
+            </div>
+            <span class="step-badge">PROPERTY FORM</span>
+        </div>
+
+        <form method="POST" action="/">
+
+            <div class="form-grid">
+                {% for column in columns %}
+
+                <div class="form-group">
+                    <label for="{{ column }}">
+                        {{ column.replace('_', ' ').title() }}
+                    </label>
+
+                    <input
+                        type="number"
+                        step="any"
+                        id="{{ column }}"
+                        name="{{ column }}"
+                        placeholder="Enter {{ column.replace('_', ' ') }}"
+                        value="{{ values.get(column, '') }}"
+                        required>
+                </div>
+
+                {% endfor %}
+            </div>
+
+            {% if error %}
+            <div class="message error" role="alert">
+                {{ error }}
+            </div>
+            {% endif %}
+
+            <button type="submit" class="predict-button">
+                <span>Predict House Price</span>
+                <span aria-hidden="true">→</span>
+            </button>
+
+            <p class="form-note">
+                Enter values consistent with your model's training data.
+            </p>
+
+        </form>
+
+        {% if prediction is not none %}
+        <section class="result" aria-live="polite">
+            <div class="result-icon">✓</div>
+
+            <p class="result-label">PREDICTION COMPLETE</p>
+
+            <h2>
+                {{ "{:,.2f}".format(prediction) }}
+            </h2>
+
+            <p>
+                Estimated model output. Currency and units depend
+                on the target used during training.
+            </p>
+        </section>
+        {% endif %}
+
+    </section>
+
+    <footer>
+        <p>California HomeValue · Machine Learning Project</p>
+        <p>Predictions are estimates and not official appraisals.</p>
+    </footer>
+
+</main>
+
+</body>
+</html>
